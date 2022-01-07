@@ -1,0 +1,28 @@
+shop:
+  id: 9639992
+  products:
+    books:
+    - title: Metro 2033
+      genre: fiction
+      author: Dmitriy Glukhovskiy
+      digital: yes
+      flags:
+      - rus
+      - new
+    - title: War and peace
+      genre: epic
+      author: Leo Tolstoy
+      digital: no
+      flags:
+      - rus
+      - old
+    movies:
+    - title: Interstellar
+      genre: science fiction
+      director: Christophe Nolan
+      digital: True
+      flags:
+      - eng
+      - new
+      - new
+      - old

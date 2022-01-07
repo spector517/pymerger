@@ -1,0 +1,10 @@
+shop:
+  id: 9639992
+  products:
+    movies:
+    - title: His Dark Materials
+      genre: fantasy
+      company: BBC
+      digital: True
+      flags:
+      - serial
