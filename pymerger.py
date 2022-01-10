@@ -94,7 +94,7 @@ def merge_data(
     for obj in objs[1:]:
         merged_data = _merge_converted_data(
             merged_data,
-            _get_converted_data(obj),
+            _get_converted_data(obj, converter=assembler.converter),
             handler=assembler.handler)
     return _get_regular_data(merged_data, finder=assembler.finder)
 
