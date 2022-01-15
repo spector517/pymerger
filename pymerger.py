@@ -49,11 +49,11 @@ def _get_regular_data(
             deconverted_data = []
             for key in data.keys():
                 deconverted_data.append(
-                    _get_regular_data(data[key], f'{path}{key}/'))
+                    _get_regular_data(data[key], f'{path}{key}/', finder=finder))
         else:
             for key in data.keys():
                 deconverted_data.update(
-                    {key: _get_regular_data(data[key], f'{path}{key}/')})
+                    {key: _get_regular_data(data[key], f'{path}{key}/', finder=finder)})
     else:
         deconverted_data = data
     return deconverted_data
@@ -71,7 +71,7 @@ def _merge_converted_data(
         for key in obj2_keys:
             if key in obj1_keys:
                 merged_converted_data.update(
-                    {key: _merge_converted_data(obj1[key], obj2[key])})
+                    {key: _merge_converted_data(obj1[key], obj2[key], handler=handler)})
             else:
                 merged_converted_data.update({key: obj2[key]})
     else:
