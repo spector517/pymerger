@@ -8,6 +8,7 @@ from errors import AssemblerImplementationError
 from datatypes import DataTypes
 
 class AbstractAssembler(ABC):
+    '''doc'''
 
     def __init__(self) -> None:
         super().__init__()
@@ -37,6 +38,7 @@ class AbstractAssembler(ABC):
 
 
 class DefaultAssembler(AbstractAssembler):
+    '''doc'''
 
     def converter(self, data: DataTypes, path: str) -> str:
         return '_' + sha256(f'{data}+{path}'.encode('UTF-8')).hexdigest() + '_'
@@ -48,3 +50,32 @@ class DefaultAssembler(AbstractAssembler):
         if obj2:
             return obj2
         return obj1
+
+
+class UniqueRegexpAssembler(DefaultAssembler):
+    '''doc'''
+
+    def __init__(self, keys_paths_dict: dict) -> None:
+        self._keys_paths_dict: dict[str, str] = keys_paths_dict
+        super().__init__()
+
+    def _get_unique_key_by_regexp_path(self, path: str) -> str | None:
+        for path_regexp, unique_key in self._keys_paths_dict.items():
+            if match(path_regexp, path):
+                return unique_key
+
+    def converter(self, data: DataTypes, path: str) -> str:
+        hex_hash: str
+        base_list_path = '/'.join(path.split('/')[0:-2]) + '/'
+        key_by_path: str = self._get_unique_key_by_regexp_path(path)
+        if key_by_path:
+            try:
+                unique_value = data[key_by_path]
+                hex_hash = '_' + sha256(
+                    f'{unique_value}+{base_list_path}'.encode('UTF-8')
+                    ).hexdigest() + '_'
+            except (TypeError, KeyError):
+                hex_hash = super().converter(data, path)
+        else:
+            hex_hash = super().converter(data, path)
+        return hex_hash

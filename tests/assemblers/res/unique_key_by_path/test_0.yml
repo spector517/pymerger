@@ -1,0 +1,10 @@
+users:
+- user_id: 123
+  name: Mike
+  age: 37
+- user_id: 124
+  name: Alex
+  age: 28
+- user_id: 125
+  name: Sasha
+  age: 38

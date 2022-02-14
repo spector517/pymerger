@@ -1,0 +1,14 @@
+users:
+- user_id: 123
+  name: Michael
+  age: 37
+- user_id: 124
+  name: Alex
+  age: 28
+  surname: Rojas
+- user_id: 125
+  name: Sasha
+  age: 38
+- user_id: 456
+  name: Lazy
+  age: 21
