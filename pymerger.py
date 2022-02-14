@@ -14,8 +14,6 @@ from assemblers import DefaultAssembler
 from datatypes import DataTypes
 from datatypes import ConvertedDataTypes
 
-__default_assembler = DefaultAssembler()
-
 
 def _get_converted_data(
         data: DataTypes,
@@ -81,7 +79,7 @@ def _merge_converted_data(
 
 def merge_data(
         *objs: DataTypes,
-        assembler: AbstractAssembler = __default_assembler) -> DataTypes:
+        assembler: AbstractAssembler = DefaultAssembler()) -> DataTypes:
     '''doc'''
     if len(objs) < 2:
         raise AttributesError(
