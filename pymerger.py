@@ -1,5 +1,4 @@
 '''doc'''
-from types import FunctionType
 from argparse import ArgumentParser
 from argparse import Namespace
 from json import dumps as json_dump
@@ -20,19 +19,19 @@ __default_assembler = DefaultAssembler()
 
 def _get_converted_data(
         data: DataTypes,
-        path: str = '/',
-        converter: FunctionType = __default_assembler.converter) -> ConvertedDataTypes:
+        path: str,
+        assembler: AbstractAssembler) -> ConvertedDataTypes:
     converted_data: ConvertedDataTypes = {}
     if isinstance(data, dict):
         for key in data.keys():
             converted_data.update(
-                {key: _get_converted_data(data[key], f'{path}{key}/', converter)})
+                {key: _get_converted_data(data[key], f'{path}{key}/', assembler)})
     elif isinstance(data, list):
         for i, item in enumerate(data):
             converted_data.update(
                 {
-                    converter(item, f'{path}_{i}_/'):
-                    _get_converted_data(item, f'{path}_{i}_/', converter)
+                    assembler.converter(item, f'{path}_{i}_/'):
+                    _get_converted_data(item, f'{path}_{i}_/', assembler)
                 }
             )
     else:
@@ -42,19 +41,19 @@ def _get_converted_data(
 
 def _get_regular_data(
         data: ConvertedDataTypes,
-        path: str = '/',
-        finder: FunctionType = __default_assembler.finder) -> DataTypes:
+        path: str,
+        assembler: AbstractAssembler) -> DataTypes:
     deconverted_data: DataTypes = {}
     if isinstance(data, dict):
-        if finder(data.keys()):
+        if assembler.finder(data.keys()):
             deconverted_data = []
             for key in data.keys():
                 deconverted_data.append(
-                    _get_regular_data(data[key], f'{path}{key}/', finder=finder))
+                    _get_regular_data(data[key], f'{path}{key}/', assembler))
         else:
             for key in data.keys():
                 deconverted_data.update(
-                    {key: _get_regular_data(data[key], f'{path}{key}/', finder=finder)})
+                    {key: _get_regular_data(data[key], f'{path}{key}/', assembler)})
     else:
         deconverted_data = data
     return deconverted_data
@@ -63,7 +62,7 @@ def _get_regular_data(
 def _merge_converted_data(
         obj1: ConvertedDataTypes,
         obj2: ConvertedDataTypes,
-        handler: FunctionType = __default_assembler.handler) -> ConvertedDataTypes:
+        assembler: AbstractAssembler) -> ConvertedDataTypes:
     merged_converted_data: ConvertedDataTypes = {}
     if isinstance(obj1, dict) and isinstance(obj2, dict):
         merged_converted_data = obj1.copy()
@@ -72,11 +71,11 @@ def _merge_converted_data(
         for key in obj2_keys:
             if key in obj1_keys:
                 merged_converted_data.update(
-                    {key: _merge_converted_data(obj1[key], obj2[key], handler=handler)})
+                    {key: _merge_converted_data(obj1[key], obj2[key], assembler)})
             else:
                 merged_converted_data.update({key: obj2[key]})
     else:
-        merged_converted_data = handler(obj1, obj2)
+        merged_converted_data = assembler.handler(obj1, obj2)
     return merged_converted_data
 
 
@@ -91,14 +90,13 @@ def merge_data(
     if len(merge_types) > 1:
         merge_types_str: str = ', '.join(str(merge_type) for merge_type in merge_types)
         raise TypeError(f'All objects of merge must be a same type. Found {merge_types_str}')
-    merged_data: ConvertedDataTypes = _get_converted_data(
-        objs[0], converter=assembler.converter)
+    merged_data: ConvertedDataTypes = _get_converted_data(objs[0], '/', assembler)
     for obj in objs[1:]:
         merged_data = _merge_converted_data(
             merged_data,
-            _get_converted_data(obj, converter=assembler.converter),
-            handler=assembler.handler)
-    return _get_regular_data(merged_data, finder=assembler.finder)
+            _get_converted_data(obj, '/',assembler),
+            assembler)
+    return _get_regular_data(merged_data, '/', assembler)
 
 
 def _validate_args(args: Namespace) -> None:
