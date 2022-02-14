@@ -1,3 +1,4 @@
+'''doc'''
 from types import FunctionType
 from argparse import ArgumentParser
 from argparse import Namespace
@@ -82,6 +83,7 @@ def _merge_converted_data(
 def merge_data(
         *objs: DataTypes,
         assembler: AbstractAssembler = __default_assembler) -> DataTypes:
+    '''doc'''
     if len(objs) < 2:
         raise AttributesError(
             f'Merge only two and more objects (length of objs - {len(objs)})')
@@ -111,6 +113,7 @@ def _validate_args(args: Namespace) -> None:
 
 
 def main():
+    '''doc'''
     argument_parser = ArgumentParser()
     argument_parser.add_argument('files', nargs='+', help='Paths to YAML/JSON with objects')
     argument_parser.add_argument(

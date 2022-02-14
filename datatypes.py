@@ -1,3 +1,4 @@
+'''doc'''
 from typing import Union
 from types import NoneType
 

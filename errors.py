@@ -1,6 +1,8 @@
+
+'''doc'''
 class AttributesError(Exception):
-    pass
+    '''doc'''
 
 
 class AssemblerImplementationError(Exception):
-    pass
+    '''doc'''

@@ -1,3 +1,4 @@
+'''doc'''
 from types import FunctionType
 from abc import ABC
 from abc import abstractmethod
@@ -26,15 +27,15 @@ class AbstractAssembler(ABC):
 
     @abstractmethod
     def converter(self, data: DataTypes, path: str) -> str:
-        pass
+        '''doc'''
 
     @abstractmethod
     def finder(self, keys: list) -> list:
-        pass
+        '''doc'''
 
     @abstractmethod
     def handler(self, obj1: DataTypes, obj2: DataTypes) -> DataTypes:
-        pass
+        '''doc'''
 
 
 class DefaultAssembler(AbstractAssembler):
