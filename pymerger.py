@@ -19,7 +19,7 @@ def _get_converted_data(
         data: DataTypes,
         path: str,
         assembler: AbstractAssembler) -> ConvertedDataTypes:
-    converted_data: ConvertedDataTypes = {}
+    converted_data = {}
     if isinstance(data, dict):
         for key in data.keys():
             converted_data.update(
@@ -39,22 +39,21 @@ def _get_converted_data(
 
 def _get_regular_data(
         data: ConvertedDataTypes,
-        path: str,
         assembler: AbstractAssembler) -> DataTypes:
-    deconverted_data: DataTypes = {}
+    regular_data = {}
     if isinstance(data, dict):
         if assembler.finder(data.keys()):
-            deconverted_data = []
+            regular_data = []
             for key in data.keys():
-                deconverted_data.append(
-                    _get_regular_data(data[key], f'{path}{key}/', assembler))
+                regular_data.append(
+                    _get_regular_data(data[key], assembler))
         else:
             for key in data.keys():
-                deconverted_data.update(
-                    {key: _get_regular_data(data[key], f'{path}{key}/', assembler)})
+                regular_data.update(
+                    {key: _get_regular_data(data[key], assembler)})
     else:
-        deconverted_data = data
-    return deconverted_data
+        regular_data = data
+    return regular_data
 
 
 def _merge_converted_data(
@@ -84,23 +83,23 @@ def merge_data(
     if len(objs) < 2:
         raise AttributesError(
             f'Merge only two and more objects (length of objs - {len(objs)})')
-    merge_types: set = set(type(obj) for obj in objs if obj)
+    merge_types = set(type(obj) for obj in objs if obj)
     if len(merge_types) > 1:
-        merge_types_str: str = ', '.join(str(merge_type) for merge_type in merge_types)
+        merge_types_str = ', '.join(str(merge_type) for merge_type in merge_types)
         raise TypeError(f'All objects of merge must be a same type. Found {merge_types_str}')
-    merged_data: ConvertedDataTypes = _get_converted_data(objs[0], '/', assembler)
+    merged_data = _get_converted_data(objs[0], '/', assembler)
     for obj in objs[1:]:
         merged_data = _merge_converted_data(
             merged_data,
             _get_converted_data(obj, '/',assembler),
             assembler)
-    return _get_regular_data(merged_data, '/', assembler)
+    return _get_regular_data(merged_data, assembler)
 
 
 def _validate_args(args: Namespace) -> None:
-    no_exists_files: list = [file for file in args.files if not file_exists(file)]
-    if no_exists_files:
-        raise FileNotFoundError(f"File(s) '{', '.join(list(no_exists_files))}' not found!")
+    files_statuses: list = [file for file in args.files if not file_exists(file)]
+    if files_statuses:
+        raise FileNotFoundError(f"File(s) '{', '.join(list(files_statuses))}' not found!")
     dirs: list = [file for file in args.files if isdir(file)]
     if dirs:
         raise IsADirectoryError(f"A directories no supported ({', '.join(dirs)})")
@@ -108,7 +107,7 @@ def _validate_args(args: Namespace) -> None:
         raise FileExistsError(f"File(s) '{args.output}' already exists")
 
 
-def main():
+def main() -> int:
     '''doc'''
     argument_parser = ArgumentParser()
     argument_parser.add_argument('files', nargs='+', help='Paths to YAML/JSON with objects')
@@ -130,16 +129,16 @@ def main():
         help='Indent value for pretty-print result dumps (default: None)')
     args = argument_parser.parse_args()
     _validate_args(args)
-    objects: list = []
+    objects = []
     for file in args.files:
         with open(file, 'rt', encoding='UTF-8') as file_fd:
             objects.append(yaml_safe_load(file_fd.read()))
-    merged: DataTypes = merge_data(*objects)
+    merged_result: DataTypes = merge_data(*objects)
     with open(args.output, 'wt', encoding='UTF-8') as output_fd:
         if args.format == 'json':
-            output_fd.write(json_dump(merged, sort_keys=False, indent=args.indent))
+            output_fd.write(json_dump(merged_result, sort_keys=False, indent=args.indent))
         else:
-            output_fd.write(yaml_safe_dump(merged, sort_keys=False, indent=args.indent))
+            output_fd.write(yaml_safe_dump(merged_result, sort_keys=False, indent=args.indent))
 
 
 if __name__ == '__main__':

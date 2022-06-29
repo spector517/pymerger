@@ -30,7 +30,7 @@ class AbstractAssembler(ABC):
         '''doc'''
 
     @abstractmethod
-    def finder(self, keys: list) -> list:
+    def finder(self, keys: list) -> bool:
         '''doc'''
 
     @abstractmethod
