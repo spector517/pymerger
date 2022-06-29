@@ -5,6 +5,7 @@ from unittest import main
 from unittest import skip
 from os.path import join
 from os import remove
+from sys import executable
 from subprocess import run as run_process
 from subprocess import CompletedProcess
 
@@ -132,17 +133,15 @@ class TestModuleRun(TestMerge):
 
     def __init__(self, methodName: str = ...) -> None:
         super().__init__(methodName=methodName)
-        self.python_interpreter_path = join('pyvenv', 'Scripts', 'python')
 
     def _test_merge_data(self, *yaml_files_paths: list, yaml_merged: str):
         yaml_result_file_path = join('tests', 'main', 'tmp_result.yml')
         try:
             res = run_process(
-                [self.python_interpreter_path, 'pymerger.py',
+                [executable, 'pymerger.py',
                  *yaml_files_paths, '--output', yaml_result_file_path
                 ],
                 text=True, check=False, capture_output=True)
-            print(res.stderr)
             with open(yaml_merged, 'rt', encoding='UTF-8') as yaml_merged_desc:
                 yaml_merged_str = yaml_merged_desc.read().strip().lstrip('---').rstrip('...')
             with open(yaml_result_file_path, 'rt', encoding='UTF-8') as yaml_result_desc:
@@ -155,7 +154,7 @@ class TestModuleRun(TestMerge):
         test_file_1: str = join('tests', 'main', 'res', 'complex', 'test_0.yml')
         test_file_2: str = join('tests', 'main', 'res', 'non-existent-file.yml')
         result: CompletedProcess = run_process(
-            [self.python_interpreter_path, 'pymerger.py', test_file_1, test_file_2],
+            [executable, 'pymerger.py', test_file_1, test_file_2],
             text=True, capture_output=True)
         self.assertTrue('FileNotFoundError' in result.stderr)
         self.assertTrue(test_file_2 in result.stderr)
@@ -165,7 +164,7 @@ class TestModuleRun(TestMerge):
         test_file_1: str = join('tests', 'main', 'res', 'complex', 'test_0.yml')
         test_file_2: str = join('tests', 'main', 'res', 'complex')
         result: CompletedProcess = run_process(
-            [self.python_interpreter_path, 'pymerger.py', test_file_1, test_file_2],
+            [executable, 'pymerger.py', test_file_1, test_file_2],
             text=True, capture_output=True)
         self.assertTrue('IsADirectoryError' in result.stderr)
         self.assertTrue(test_file_2 in result.stderr)
@@ -176,7 +175,7 @@ class TestModuleRun(TestMerge):
         test_file_2: str = join('tests', 'main', 'res', 'complex', 'test_1.yml')
         test_file_3: str = join('tests', 'main', 'res', 'complex', 'test_merged.yml')
         result: CompletedProcess = run_process(
-            [self.python_interpreter_path, 'pymerger.py',
+            [executable, 'pymerger.py',
              test_file_1, test_file_2,'--output', test_file_3
             ],
             text=True, capture_output=True)
