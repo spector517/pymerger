@@ -1,6 +1,6 @@
 """The pymerger datatypes
 
-The module contains the types of data that the 
+The module contains the types of data that the
 Pymerger woks with
 
 Attributes:
