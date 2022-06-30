@@ -1,8 +1,11 @@
 
-'''doc'''
+""" The pymerger errors
+
+The errors, which the Pymerger can raise
+"""
 class AttributesError(Exception):
-    '''doc'''
+    """An attributed error ocurred"""
 
 
 class AssemblerImplementationError(Exception):
-    '''doc'''
+    """An assembler error ocurred"""
