@@ -7,40 +7,38 @@ The module contains an extensible conflict resolution logic
 such as merging objects of different types or merging arrays.
 (See "assembler" module documentation.)
 
-WARNING! In all examples of the module was used the DefaultAssembler
-
 Examples:
+    Use the Pymerger in your project:
+    ::
 
-    # Use the pymerger in your project
-    from pymerger import merge_data
-    o1 = {
-        'a': 1,
-        'b': 'qwe',
-        'c': [1, 2, 3]
-    }
-    o2 = {
-        'a': 2,
-        'd': 3
-    }
-    o3 = {
-        'e': 4,
-        'c': [4, 5]
-    }
-    print(merge_data(o1, o2, o3))
-    # {
-    #   'a': 2,
-    #   'b': 'qwe',
-    #   'c': [1, 2, 3, 4, 5],
-    #   'd': 3,
-    #   'e': 4
-    # }
-    # CAUTION! The result may depend on the assembler you choose
-    # Default assembler is the DefaultAssembler
+        from pymerger import merge_data
+        o1 = {'a': 1,
+              'b': 'qwe',
+              'c': [1, 2, 3]}
 
-    # Use pymerger standalone
-    python -m pymerger file1.yml file2.yml -o result.yml
-    # result.yml result of merge file1.yml and file2.yml
-    # In this mode will use the DefaultAssembler
+        o2 = {'a': 2,
+              'd': 3}
+
+        o3 = {'e': 4,
+              'c': [4, 5]}
+
+        print(merge_data(o1, o2, o3))
+        # {'a': 2,
+        #  'b': 'qwe',
+        #  'c': [1, 2, 3, 4, 5],
+        #  'd': 3,
+        #  'e': 4}
+
+    Use the Pymerger standalone:
+    ::
+
+        python -m pymerger file1.yml file2.yml -o result.yml
+    The result.yml is the result of merge file1.yml and file2.yml
+
+Warning:
+    The result may depend on the assembler you choose.
+    In all examples of the module was used the DefaultAssembler.
+    In standalone mode will use the DefaultAssemble.
 """
 from argparse import ArgumentParser
 from argparse import Namespace
@@ -221,29 +219,29 @@ def merge_data(
 
     Returns:
         A result of merge several data objects.
-        For example:
-        if
-            o1 = {
-                'a': 1,
-                'b': 'qwe',
-                'c': [1, 2, 3]
-            }
-            o2 = {
-                'a': 2,
-                'd': 3
-            }
-            o3 = {
-                'e': 4,
-                'c': [4, 5]
-            }
-        then teh result will be
-            {
-                'a': 2,
-                'b': 'qwe',
-                'c': [1, 2, 3, 4, 5],
-                'd': 3,
-                'e': 4
-            }
+
+        For example, if:
+        ::
+
+            o1 = {'a': 1,
+                  'b': 'qwe',
+                  'c': [1, 2, 3]}
+
+            o2 = {'a': 2,
+                  'd': 3}
+
+            o3 = {'e': 4,
+                  'c': [4, 5]}
+        then the result will be:
+        ::
+
+            # {
+            #     'a': 2,
+            #     'b': 'qwe',
+            #     'c': [1, 2, 3, 4, 5],
+            #     'd': 3,
+            #     'e': 4
+            # }
 
     Raises:
         AttributesError: If count of the objects lower the two
@@ -298,10 +296,7 @@ def main() -> int:
     """The main function.
 
     The main function of the pymerger standalone mode.
-    Run 'python -m pymerger --help' for more info.
-
-    Args:
-        None.
+    Run "python -m pymerger --help" for more info.
 
     Returns:
         A status code of process.

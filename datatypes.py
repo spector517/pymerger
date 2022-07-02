@@ -1,12 +1,12 @@
-"""The pymerger datatypes
+"""The pymerger datatypes.
 
 The module contains the types of data that the
-Pymerger woks with
+Pymerger woks with.
 
 Attributes:
-    DataTypes (Union): the datatypes of a YAML/JSON-like object
-    ConvertedDataTypes (Union): the datatypes of a YAML/JSON-like object
-        without the lists (arrays)
+    DataTypes (Union): The datatypes of a YAML/JSON-like object.
+    ConvertedDataTypes (Union): The datatypes of a YAML/JSON-like object
+        without the lists (arrays).
 """
 from typing import Union
 from types import NoneType

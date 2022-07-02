@@ -29,7 +29,7 @@ class AbstractAssembler(ABC):
     and bring them to their regular form. To do this, used the
     'finder' function. This function is passed the keys list of every
     objects in the data objects and if the objects is the converted array
-    then it returns True else False.
+    then it returns True otherwise False.
 
     Handling of the type conflicts.
     During the recursive merge process if the types of first
@@ -74,11 +74,9 @@ class AbstractAssembler(ABC):
     def converter(self, data: DataTypes, path: str) -> str:
         """Generate and return the key based on the object and it path.
 
-        Abstract method.
-
         Args:
             data: The data object (DataTypes).
-            path: The relative path of the data object
+            path: The relative path of the data object.
 
         Returns:
             The generated key.
@@ -90,7 +88,6 @@ class AbstractAssembler(ABC):
 
         Find the converted arrays. Return True if keys at a object
         corresponds the converted data object keys.
-        Abstract method.
 
         Args:
             keys: The list of keys.
@@ -105,7 +102,6 @@ class AbstractAssembler(ABC):
         """Get the merge result.
 
         Get the result of the two objects merge.
-        Abstract method.
 
         Args:
             obj1: The first data object (DataTypes).
@@ -127,7 +123,7 @@ class DefaultAssembler(AbstractAssembler):
 
         The return key is a SHA-256 hash-based string
         with underscores added to the beginning and end.
-        It always matches the pattern /^_[a-f0-9]{64}_$/
+        It always matches the pattern /^_[a-f0-9]{64}_$/.
 
         Args:
             data: The data object (DataTypes).
@@ -141,7 +137,7 @@ class DefaultAssembler(AbstractAssembler):
     def finder(self, keys: list) -> bool:
         """Find the converted arrays.
 
-        Check if every key matches the pattern /^_[a-f0-9]{64}_$/
+        Check if every key matches the pattern /^_[a-f0-9]{64}_$/.
 
         Args:
             keys: The list of keys.
@@ -183,8 +179,9 @@ class UniqueRegexpAssembler(DefaultAssembler):
     and its content, but based on the value of a key that is unique
     to that element.
 
-    For example:
-    if
+    For example, if
+    ::
+
         obj1 = {
             'users': [
                 {
@@ -202,7 +199,14 @@ class UniqueRegexpAssembler(DefaultAssembler):
             ]
         }
         assembler = UniqueRegexpAssembler({'\\/users\\/.+': 'user_id'})
-    then merge_data(obj1, obj2, assembler=assembler) returns:
+    then
+    ::
+
+        merge_data(obj1, obj2, assembler=assembler)
+
+    returns the
+    ::
+
         {
             'users': [
                 {
@@ -214,21 +218,29 @@ class UniqueRegexpAssembler(DefaultAssembler):
         }
 
     Note:
-    if
-        assembler = DefaultAssembler()
-    then merge_data(obj1, obj2, assembler=assembler) returns:
-        {
-            'users': [
-                {
-                    'user_id': 123,
-                    'name': 'Alex'
-                },
-                {
-                    'user_id': 123,
-                    'surname': 'Morgan'
-                }
-            ]
-        }
+        if change assembler to
+        ::
+
+            assembler = DefaultAssembler()
+        then
+        ::
+
+            merge_data(obj1, obj2, assembler=assembler)
+        returns the
+        ::
+
+            {
+                'users': [
+                    {
+                        'user_id': 123,
+                        'name': 'Alex'
+                    },
+                    {
+                        'user_id': 123,
+                        'surname': 'Morgan'
+                    }
+                ]
+            }
 
     Attributes:
         _keys_paths_dict: dict of the regex: unique element key
