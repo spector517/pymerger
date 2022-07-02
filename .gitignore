@@ -1,3 +1,5 @@
 pyvenv
 *__
 .vscode
+autodoc/build
+autodoc/source/*.rst
